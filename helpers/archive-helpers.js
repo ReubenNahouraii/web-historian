@@ -29,10 +29,8 @@ exports.readListOfUrls = function(callback) {
 };
 
 exports.isUrlInList = function(url, callback) {
-  //this checks if url is in sites.txt
-  //returns boolean 
-  //var inlist = false;
-  fs.readFile(exports.paths.list, 'utf8', function (err, data) {
+
+  fs.readFile(exports.paths.list, 'utf8', (err, data) => {
     if (err) { throw err; } 
     if (data.indexOf(url) >= 0) {
       callback(true);
@@ -40,17 +38,29 @@ exports.isUrlInList = function(url, callback) {
       callback(false);
     }
   });
-  ///return inlist;
 };
 
-exports.addUrlToList = function(url) {
+exports.addUrlToList = function(url, callback) {
   fs.appendFile(exports.paths.list, url + '\n', function (err) {
     if (err) { throw err; }
+    callback();
     console.log('Saved!');
   });
 };
 
 exports.isUrlArchived = function(url, callback) {
+
+  // archivedSites: path.join(__dirname, '../archives/sites'),
+
+  fs.stat(exports.paths.archivedSites + url, function(err) {
+    if(!err) {
+      callback(true);
+    } else {
+      callback(false);
+    }
+  });
+
+
 };
 
 exports.downloadUrls = function(urls) {
